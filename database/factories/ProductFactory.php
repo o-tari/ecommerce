@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\ProductShippingInfo;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -50,6 +51,7 @@ class ProductFactory extends Factory
             // Create 1 to 3 categories and attach them to the product
             $categories = Category::factory()->count(rand(1, 3))->create();
             $product->categories()->attach($categories->pluck('id'));
+            ProductShippingInfo::factory()->create(['product_id' => $product->id]);
         });
     }
 }

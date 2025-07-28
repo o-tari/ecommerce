@@ -98,6 +98,66 @@ class ProductResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable(),
+
+                Forms\Components\Group::make([
+                    Forms\Components\TextInput::make('weight')
+                        ->numeric()
+                        ->required()
+                        ->reactive()
+                        ->suffix(fn (Forms\Get $get) => $get('weight_unit')),
+
+                    Forms\Components\Select::make('weight_unit')
+                        ->options([
+                            'kg' => 'Kilograms (kg)',
+                            'lb' => 'Pounds (lb)',
+                        ])
+                        ->required()
+                        ->reactive(),
+
+                    Forms\Components\TextInput::make('volume')
+                        ->numeric()
+                        ->required()
+                        ->reactive()
+                        ->suffix(fn (Forms\Get $get) => $get('volume_unit')),
+
+                    Forms\Components\Select::make('volume_unit')
+                        ->options([
+                            'm3' => 'Cubic Meters (m³)',
+                            'ft3' => 'Cubic Feet (ft³)',
+                            'cm3' => 'Cubic Centimeters (cm³)',
+                            'in3' => 'Cubic Inches (in³)',
+                        ])
+                        ->required()
+                        ->reactive(),
+
+                    Forms\Components\TextInput::make('dimension_width')
+                        ->numeric()
+                        ->required()
+                        ->reactive()
+                        ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
+
+                    Forms\Components\TextInput::make('dimension_height')
+                        ->numeric()
+                        ->required()
+                        ->reactive()
+                        ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
+
+                    Forms\Components\TextInput::make('dimension_depth')
+                        ->numeric()
+                        ->required()
+                        ->reactive()
+                        ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
+
+                    Forms\Components\Select::make('dimension_unit')
+                        ->options([
+                            'm' => 'Meters (m)',
+                            'ft' => 'Feet (ft)',
+                            'cm' => 'Centimeters (cm)',
+                            'in' => 'Inches (in)',
+                        ])
+                        ->required()
+                        ->reactive(),
+                ])->relationship('shippingInfo')->label('Shipping Info')->columnSpanFull()->columns(4),
             ]);
     }
 
