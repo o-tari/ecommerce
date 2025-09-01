@@ -158,6 +158,15 @@ class ProductResource extends Resource
                         ->required()
                         ->reactive(),
                 ])->relationship('shippingInfo')->label('Shipping Info')->columnSpanFull()->columns(4),
+
+                Forms\Components\Repeater::make('attributes')
+                    ->relationship('attributes', 'attribute_name')
+                    ->searchable(),
+
+//                Select::make('attributeValues')
+//                    ->relationship('attributeValues', 'attribute_value')
+//                    ->multiple()
+//                    ->searchable(),
             ]);
     }
 
@@ -246,7 +255,7 @@ class ProductResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ProductAttributesRelationManager::class,
         ];
     }
 

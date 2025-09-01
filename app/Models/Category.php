@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * @property string $id
  * @property string $category_name
  * @property string|null $category_description
- * @property string|null $icon
- * @property string|null $image
  * @property string|null $placeholder
  * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -42,8 +42,6 @@ class Category extends Model implements HasMedia
     protected $fillable = [
         'category_name',
         'category_description',
-//        'icon',
-//        'image',
         'placeholder',
         'active',
         'parent_id',
@@ -97,5 +95,18 @@ class Category extends Model implements HasMedia
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_categories');
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumbnail')
+            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->nonQueued();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('category_image')->singleFile();
+        $this->addMediaCollection('category_icon')->singleFile();
     }
 }

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->string('short_description', 165);
             $table->text('product_description');
 
+            $table->enum('product_type', ['simple', 'variable'])->nullable();
             $table->boolean('published')->default(false);
             $table->boolean('disable_out_of_stock')->default(true);
             $table->text('note')->nullable();

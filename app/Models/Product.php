@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\MediaCollections\Models\Media as SpatieMedia;
 
 /**
  * @property string $id
@@ -55,6 +57,7 @@ class Product extends Model implements HasMedia
         'note',
         'created_by',
         'updated_by',
+        'product_type',
     ];
 
     /**
@@ -69,6 +72,7 @@ class Product extends Model implements HasMedia
         'quantity' => 'integer',
         'published' => 'boolean',
         'disable_out_of_stock' => 'boolean',
+        'product_type' => 'string',
     ];
 
     /**
@@ -97,4 +101,52 @@ class Product extends Model implements HasMedia
         return $this->hasOne(ProductShippingInfo::class);
     }
 
+    /**
+     * Get the product attributes for the product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productAttributes()
+    {
+        return $this->hasMany(ProductAttribute::class);
+    }
+
+    /**
+     * Get the attributes for the product through product attributes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function attributes()
+    {
+        return $this->belongsToMany(
+            Attribute::class,
+            ProductAttribute::class,
+        );
+    }
+
+    /**
+     * Get all attribute values for the product via product attributes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function attributeValues()
+    {
+        return $this->belongsToMany(
+            AttributeValue::class,
+            ProductAttributeValue::class,
+        );
+    }
+
+    public function registerMediaConversions(?SpatieMedia $media = null): void
+    {
+        $this->addMediaConversion('thumbnail')
+            ->fit(Manipulations::FIT_CROP, 300, 300)
+            ->nonQueued();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('product_images');
+        $this->addMediaCollection('product_thumbnail')->singleFile();
+    }
 }
