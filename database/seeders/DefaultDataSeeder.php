@@ -22,13 +22,13 @@ class DefaultDataSeeder extends Seeder
         $colorAttribute = Attribute::create(['attribute_name' => 'Color']);
         $sizeAttribute = Attribute::create(['attribute_name' => 'Size']);
 
-        $colorAttribute->attributeValues()->createMany([
+        $colorAttribute->values()->createMany([
             ['attribute_value' => 'black', 'color' => '#000'],
             ['attribute_value' => 'white', 'color' => '#FFF'],
             ['attribute_value' => 'red', 'color' => '#FF0000'],
         ]);
 
-        $sizeAttribute->attributeValues()->createMany([
+        $sizeAttribute->values()->createMany([
             ['attribute_value' => 'S'],
             ['attribute_value' => 'M'],
             ['attribute_value' => 'L'],
@@ -59,11 +59,11 @@ class DefaultDataSeeder extends Seeder
         }
 
         // Roles
-        Role::create(['name' => 'Store Administrator']);
-        Role::create(['name' => 'Sales Manager']);
-        Role::create(['name' => 'Sales Staff']);
-        Role::create(['name' => 'Guest']);
-        Role::create(['name' => 'Investor']);
+        Role::firstOrCreate(['name' => 'Store Administrator']);
+        Role::firstOrCreate(['name' => 'Sales Manager']);
+        Role::firstOrCreate(['name' => 'Sales Staff']);
+        Role::firstOrCreate(['name' => 'Guest']);
+        Role::firstOrCreate(['name' => 'Investor']);
 
         // Tags
         $tags = [

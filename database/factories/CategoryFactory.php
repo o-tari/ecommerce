@@ -19,8 +19,8 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'parent_id' => Category::factory()->withoutParent(), // Allows for nullable parent, randomly creates a parent if not null
-            'category_name' => $this->faker->unique()->word(),
+            'parent_id' => null, // Default to no parent to avoid infinite loops
+            'category_name' => $this->faker->unique()->words(2, true),
             'category_description' => $this->faker->text(200), // Limit description length for realism
 //            'icon' => $this->faker->randomElement(['fas fa-folder', 'fas fa-tag', 'fas fa-cubes', 'fas fa-box', 'fas fa-list']), // Example font awesome icons
 //            'image' => $this->faker->imageUrl(640, 480, 'categories', true), // Realistic image URL

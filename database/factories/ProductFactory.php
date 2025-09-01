@@ -20,7 +20,7 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $productName = $this->faker->sentence(3);
+        $productName = $this->faker->unique()->sentence(3);
         $salePrice = $this->faker->randomFloat(2, 1, 1000);
         $comparePrice = $salePrice * $this->faker->randomFloat(0.8, 1.0, 1.2);
         if ($comparePrice < $salePrice) {
@@ -28,7 +28,7 @@ class ProductFactory extends Factory
         }
 
         return [
-            'slug' => Str::slug($productName),
+            'slug' => Str::slug($productName) . '-' . $this->faker->unique()->numberBetween(1000, 9999),
             'product_name' => $productName,
             'sku' => $this->faker->optional()->text(5),
             'sale_price' => $salePrice,

@@ -13,16 +13,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create admin user with proper role first
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Run seeders that create roles and basic data
+        $this->call([
+            DefaultDataSeeder::class,
         ]);
 
+        // Assign admin role after roles are created
+        if (class_exists(\Spatie\Permission\Models\Role::class)) {
+            $adminRole = \Spatie\Permission\Models\Role::where('name', 'Store Administrator')->first();
+            if ($adminRole) {
+                $adminUser->assignRole($adminRole);
+            }
+        }
+
+        // Now run the dashboard seeder
         $this->call([
-            CategorySeeder::class,
-            ProductSeeder::class
+            DashboardDataSeeder::class,
         ]);
     }
 }
