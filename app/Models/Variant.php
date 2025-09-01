@@ -15,6 +15,18 @@ class Variant extends Model
         'variant_option',
         'product_id',
         'variant_option_id',
+        'sku',
+        'price',
+        'quantity',
+        'weight',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'quantity' => 'integer',
+        'weight' => 'decimal:2',
+        'is_active' => 'boolean',
     ];
 
     public function product(): BelongsTo
@@ -27,13 +39,28 @@ class Variant extends Model
         return $this->belongsTo(VariantOption::class);
     }
 
+    public function variantOptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(VariantOption::class);
+    }
+
     public function attributeValues(): BelongsToMany
     {
         return $this->belongsToMany(
-            ProductAttributeValue::class,
+            AttributeValue::class,
             'variant_values',
             'variant_id',
-            'product_attribute_value_id'
+            'attribute_value_id'
+        );
+    }
+
+    public function productAttributes(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Attribute::class,
+            'variant_values',
+            'variant_id',
+            'attribute_id'
         );
     }
 }

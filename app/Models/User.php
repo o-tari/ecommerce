@@ -4,15 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -58,5 +60,53 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the products created by this user.
+     */
+    public function createdProducts(): HasMany
+    {
+        return $this->hasMany(Product::class, 'created_by');
+    }
+
+    /**
+     * Get the products updated by this user.
+     */
+    public function updatedProducts(): HasMany
+    {
+        return $this->hasMany(Product::class, 'updated_by');
+    }
+
+    /**
+     * Get the categories created by this user.
+     */
+    public function createdCategories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'created_by');
+    }
+
+    /**
+     * Get the categories updated by this user.
+     */
+    public function updatedCategories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'updated_by');
+    }
+
+    /**
+     * Get the attributes created by this user.
+     */
+    public function createdAttributes(): HasMany
+    {
+        return $this->hasMany(Attribute::class, 'created_by');
+    }
+
+    /**
+     * Get the attributes updated by this user.
+     */
+    public function updatedAttributes(): HasMany
+    {
+        return $this->hasMany(Attribute::class, 'updated_by');
     }
 }

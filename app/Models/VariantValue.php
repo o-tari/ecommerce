@@ -12,10 +12,12 @@ class VariantValue extends Model
 
     protected $fillable = [
         'variant_id',
-        'product_attribute_value_id',
+        'product_id',
+        'attribute_id',
+        'attribute_value_id',
     ];
 
-    protected $primaryKey = ['variant_id', 'product_attribute_value_id'];
+    protected $primaryKey = ['variant_id', 'product_id', 'attribute_id', 'attribute_value_id'];
     public $incrementing = false;
     public $timestamps = false;
 
@@ -24,8 +26,18 @@ class VariantValue extends Model
         return $this->belongsTo(Variant::class);
     }
 
-    public function productAttributeValue(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(ProductAttributeValue::class);
+        return $this->belongsTo(Product::class);
+    }
+
+    public function attribute(): BelongsTo
+    {
+        return $this->belongsTo(Attribute::class);
+    }
+
+    public function attributeValue(): BelongsTo
+    {
+        return $this->belongsTo(AttributeValue::class);
     }
 }

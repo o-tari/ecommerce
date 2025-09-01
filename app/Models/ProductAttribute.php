@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class ProductAttribute extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -64,8 +67,8 @@ class ProductAttribute extends Model
         return $this->belongsToMany(
             AttributeValue::class,
             'product_attribute_values',
-            'product_attribute_id',
+            'product_id',
             'attribute_value_id'
-        );
+        )->wherePivot('attribute_id', $this->attribute_id);
     }
 }
