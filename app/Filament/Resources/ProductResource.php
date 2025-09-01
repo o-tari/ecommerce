@@ -7,11 +7,13 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
@@ -39,6 +41,8 @@ class ProductResource extends Resource
                 TextInput::make('product_name')
                     ->required()
                     ->maxLength(255)
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state)))
                     ->columnSpanFull(),
                 TextInput::make('slug')
                     ->required()
@@ -99,69 +103,72 @@ class ProductResource extends Resource
                     ->preload()
                     ->nullable(),
 
-                Forms\Components\Group::make([
-                    Forms\Components\TextInput::make('weight')
-                        ->numeric()
-                        ->required()
-                        ->reactive()
-                        ->suffix(fn (Forms\Get $get) => $get('weight_unit')),
+                Forms\Components\Section::make('Shipping Information')
+                    ->schema([
+                        Forms\Components\TextInput::make('weight')
+                            ->numeric()
+                            ->nullable()
+                            ->suffix(fn (Forms\Get $get) => $get('weight_unit')),
 
-                    Forms\Components\Select::make('weight_unit')
-                        ->options([
-                            'kg' => 'Kilograms (kg)',
-                            'lb' => 'Pounds (lb)',
-                        ])
-                        ->required()
-                        ->reactive(),
+                        Forms\Components\Select::make('weight_unit')
+                            ->options([
+                                'kg' => 'Kilograms (kg)',
+                                'lb' => 'Pounds (lb)',
+                            ])
+                            ->nullable(),
 
-                    Forms\Components\TextInput::make('volume')
-                        ->numeric()
-                        ->required()
-                        ->reactive()
-                        ->suffix(fn (Forms\Get $get) => $get('volume_unit')),
+                        Forms\Components\TextInput::make('volume')
+                            ->numeric()
+                            ->nullable()
+                            ->suffix(fn (Forms\Get $get) => $get('volume_unit')),
 
-                    Forms\Components\Select::make('volume_unit')
-                        ->options([
-                            'm3' => 'Cubic Meters (m³)',
-                            'ft3' => 'Cubic Feet (ft³)',
-                            'cm3' => 'Cubic Centimeters (cm³)',
-                            'in3' => 'Cubic Inches (in³)',
-                        ])
-                        ->required()
-                        ->reactive(),
+                        Forms\Components\Select::make('volume_unit')
+                            ->options([
+                                'm3' => 'Cubic Meters (m³)',
+                                'ft3' => 'Cubic Feet (ft³)',
+                                'cm3' => 'Cubic Centimeters (cm³)',
+                                'in3' => 'Cubic Inches (in³)',
+                            ])
+                            ->nullable(),
 
-                    Forms\Components\TextInput::make('dimension_width')
-                        ->numeric()
-                        ->required()
-                        ->reactive()
-                        ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
+                        Forms\Components\TextInput::make('dimension_width')
+                            ->numeric()
+                            ->nullable()
+                            ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
 
-                    Forms\Components\TextInput::make('dimension_height')
-                        ->numeric()
-                        ->required()
-                        ->reactive()
-                        ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
+                        Forms\Components\TextInput::make('dimension_height')
+                            ->numeric()
+                            ->nullable()
+                            ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
 
-                    Forms\Components\TextInput::make('dimension_depth')
-                        ->numeric()
-                        ->required()
-                        ->reactive()
-                        ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
+                        Forms\Components\TextInput::make('dimension_depth')
+                            ->numeric()
+                            ->nullable()
+                            ->suffix(fn (Forms\Get $get) => $get('dimension_unit')),
 
-                    Forms\Components\Select::make('dimension_unit')
-                        ->options([
-                            'm' => 'Meters (m)',
-                            'ft' => 'Feet (ft)',
-                            'cm' => 'Centimeters (cm)',
-                            'in' => 'Inches (in)',
-                        ])
-                        ->required()
-                        ->reactive(),
-                ])->relationship('shippingInfo')->label('Shipping Info')->columnSpanFull()->columns(4),
+                        Forms\Components\Select::make('dimension_unit')
+                            ->options([
+                                'm' => 'Meters (m)',
+                                'ft' => 'Feet (ft)',
+                                'cm' => 'Centimeters (cm)',
+                                'in' => 'Inches (in)',
+                            ])
+                            ->nullable(),
+                    ])
+                    ->columns(4)
+                    ->collapsible(),
 
                 Forms\Components\Repeater::make('attributes')
-                    ->relationship('attributes', 'attribute_name')
-                    ->searchable(),
+                    ->relationship('attributes')
+                    ->schema([
+                        Forms\Components\TextInput::make('attribute_name')
+                            ->required()
+                            ->label('Attribute Name'),
+                        Forms\Components\TextInput::make('attribute_value')
+                            ->required()
+                            ->label('Attribute Value'),
+                    ])
+                    ->columns(2),
 
 //                Select::make('attributeValues')
 //                    ->relationship('attributeValues', 'attribute_value')
@@ -256,6 +263,9 @@ class ProductResource extends Resource
     {
         return [
             RelationManagers\ProductAttributesRelationManager::class,
+            RelationManagers\VariantsRelationManager::class,
+            RelationManagers\TagsRelationManager::class,
+            RelationManagers\SuppliersRelationManager::class,
         ];
     }
 
