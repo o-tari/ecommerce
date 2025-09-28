@@ -19,6 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.sanctum' => \Laravel\Sanctum\Http\Middleware\Authenticate::class,
         ]);
+        
+        // Exclude CSRF validation for API routes
+        $middleware->validateCsrfTokens(except: [
+            'api/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

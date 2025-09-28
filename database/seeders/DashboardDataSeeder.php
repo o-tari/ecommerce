@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Customer;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
