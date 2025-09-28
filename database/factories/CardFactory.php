@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,27 +18,27 @@ class CardFactory extends Factory
     public function definition(): array
     {
         return [
-            'customer_id' => Customer::factory(),
+            'user_id' => User::factory(),
         ];
     }
 
     /**
-     * Indicate that the card has no customer (guest user).
+     * Indicate that the card has no user (guest user).
      */
     public function guest(): static
     {
         return $this->state(fn (array $attributes) => [
-            'customer_id' => null,
+            'user_id' => null,
         ]);
     }
 
     /**
-     * Indicate that the card belongs to a specific customer.
+     * Indicate that the card belongs to a specific user.
      */
-    public function forCustomer(Customer $customer): static
+    public function forUser(User $user): static
     {
         return $this->state(fn (array $attributes) => [
-            'customer_id' => $customer->id,
+            'user_id' => $user->id,
         ]);
     }
 }

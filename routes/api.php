@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\Api\V1\SupplierController;
 use App\Http\Controllers\Api\V1\OrderController;
-use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\AttributeController;
 use App\Http\Controllers\Api\V1\VariantController;
@@ -35,6 +34,22 @@ Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     
+    // Public product routes (no authentication required)
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{product}', [ProductController::class, 'show']);
+    
+    // Public category routes (no authentication required)
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{category}', [CategoryController::class, 'show']);
+    
+    // Public tag routes (no authentication required)
+    Route::get('/tags', [TagController::class, 'index']);
+    Route::get('/tags/{tag}', [TagController::class, 'show']);
+    
+    // Public slideshow routes (no authentication required)
+    Route::get('/slideshows', [SlideshowController::class, 'index']);
+    Route::get('/slideshows/{slideshow}', [SlideshowController::class, 'show']);
+    
     // Protected routes
     Route::middleware('auth:sanctum')->group(function () {
         // Auth
@@ -42,23 +57,26 @@ Route::prefix('v1')->group(function () {
         Route::post('/revoke-token', [AuthController::class, 'revokeToken']);
         Route::get('/user', [AuthController::class, 'user']);
         
-        // Products
-        Route::apiResource('products', ProductController::class);
+        // Protected product routes (authentication required)
+        Route::post('/products', [ProductController::class, 'store']);
+        Route::put('/products/{product}', [ProductController::class, 'update']);
+        Route::delete('/products/{product}', [ProductController::class, 'destroy']);
         
-        // Categories
-        Route::apiResource('categories', CategoryController::class);
+        // Protected category routes (authentication required)
+        Route::post('/categories', [CategoryController::class, 'store']);
+        Route::put('/categories/{category}', [CategoryController::class, 'update']);
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
         
-        // Tags
-        Route::apiResource('tags', TagController::class);
+        // Protected tag routes (authentication required)
+        Route::post('/tags', [TagController::class, 'store']);
+        Route::put('/tags/{tag}', [TagController::class, 'update']);
+        Route::delete('/tags/{tag}', [TagController::class, 'destroy']);
         
         // Suppliers
         Route::apiResource('suppliers', SupplierController::class);
         
         // Orders
         Route::apiResource('orders', OrderController::class);
-        
-        // Customers
-        Route::apiResource('customers', CustomerController::class);
         
         // Users
         Route::apiResource('users', UserController::class);
@@ -72,8 +90,10 @@ Route::prefix('v1')->group(function () {
         // Coupons
         Route::apiResource('coupons', CouponController::class);
         
-        // Slideshows
-        Route::apiResource('slideshows', SlideshowController::class);
+        // Protected slideshow routes (authentication required)
+        Route::post('/slideshows', [SlideshowController::class, 'store']);
+        Route::put('/slideshows/{slideshow}', [SlideshowController::class, 'update']);
+        Route::delete('/slideshows/{slideshow}', [SlideshowController::class, 'destroy']);
         
         // Cards
         Route::apiResource('cards', CardController::class);

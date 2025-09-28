@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->string('id', 50)->primary();
             $table->foreignId('coupon_id')->nullable()->constrained('coupons')->cascadeOnDelete();
-            $table->foreignId('customer_id')->nullable()->constrained('customers')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('order_status_id')->nullable()->constrained('order_statuses')->cascadeOnDelete();
             $table->timestamp('order_approved_at')->nullable();
             $table->timestamp('order_delivered_carrier_date')->nullable();

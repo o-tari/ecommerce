@@ -15,11 +15,11 @@ class CardController extends BaseApiController
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Card::with(['customer', 'cardItems.product', 'createdBy', 'updatedBy']);
+        $query = Card::with(['user', 'cardItems.product', 'createdBy', 'updatedBy']);
 
         // Apply filters
-        if ($request->has('customer_id')) {
-            $query->where('customer_id', $request->customer_id);
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
         }
 
         if ($request->has('status')) {
@@ -27,9 +27,9 @@ class CardController extends BaseApiController
         }
 
         if ($request->has('search')) {
-            $query->whereHas('customer', function($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->search . '%')
-                  ->orWhere('last_name', 'like', '%' . $request->search . '%');
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -58,7 +58,7 @@ class CardController extends BaseApiController
 
         $card = Card::create($data);
 
-        $card->load(['customer', 'cardItems.product', 'createdBy', 'updatedBy']);
+        $card->load(['user', 'cardItems.product', 'createdBy', 'updatedBy']);
 
         return $this->successResponse($card, 'Card created successfully', Response::HTTP_CREATED);
     }
@@ -68,7 +68,7 @@ class CardController extends BaseApiController
      */
     public function show(Card $card): JsonResponse
     {
-        $card->load(['customer', 'cardItems.product', 'createdBy', 'updatedBy']);
+        $card->load(['user', 'cardItems.product', 'createdBy', 'updatedBy']);
 
         return $this->successResponse($card, 'Card retrieved successfully');
     }
@@ -85,7 +85,7 @@ class CardController extends BaseApiController
 
         $card->update($data);
 
-        $card->load(['customer', 'cardItems.product', 'createdBy', 'updatedBy']);
+        $card->load(['user', 'cardItems.product', 'createdBy', 'updatedBy']);
 
         return $this->successResponse($card, 'Card updated successfully');
     }

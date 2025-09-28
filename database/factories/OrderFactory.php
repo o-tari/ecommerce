@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -36,7 +36,7 @@ class OrderFactory extends Factory
             'id' => $this->faker->unique()->regexify('ORD-[0-9]{8}'),
             'order_number' => $this->faker->unique()->regexify('ORD-[0-9]{8}'),
             'coupon_id' => null,
-            'customer_id' => Customer::factory(),
+            'user_id' => User::factory(),
             'order_status_id' => OrderStatus::factory(),
             'subtotal' => $subtotal,
             'tax_amount' => $taxAmount,

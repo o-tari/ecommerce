@@ -14,12 +14,12 @@ class Card extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'customer_id',
+        'user_id',
     ];
 
-    public function customer(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class);
     }
 
     public function cardItems(): HasMany

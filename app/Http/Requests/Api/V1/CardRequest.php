@@ -20,7 +20,7 @@ class CardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required|exists:customers,id',
+            'user_id' => 'required|exists:users,id',
             'status' => 'required|string|max:255',
             'notes' => 'nullable|string|max:65535',
             'created_by' => 'nullable|exists:users,id',
@@ -34,8 +34,8 @@ class CardRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'customer_id.required' => 'Customer is required.',
-            'customer_id.exists' => 'Customer does not exist.',
+            'user_id.required' => 'User is required.',
+            'user_id.exists' => 'User does not exist.',
             'status.required' => 'Status is required.',
         ];
     }

@@ -21,7 +21,7 @@ class OrderRequest extends FormRequest
     {
         $rules = [
             'order_number' => 'string|max:255|unique:orders,order_number,' . $this->order,
-            'customer_id' => 'exists:customers,id',
+            'user_id' => 'exists:users,id',
             'order_status_id' => 'exists:order_statuses,id',
             'subtotal' => 'numeric|min:0',
             'total_amount' => 'numeric|min:0',
@@ -42,7 +42,7 @@ class OrderRequest extends FormRequest
         // Make certain fields required only on creation
         if ($this->isMethod('POST')) {
             $rules['order_number'] = 'required|' . $rules['order_number'];
-            $rules['customer_id'] = 'required|' . $rules['customer_id'];
+            $rules['user_id'] = 'required|' . $rules['user_id'];
             $rules['order_status_id'] = 'required|' . $rules['order_status_id'];
             $rules['subtotal'] = 'required|' . $rules['subtotal'];
             $rules['total_amount'] = 'required|' . $rules['total_amount'];
@@ -59,8 +59,8 @@ class OrderRequest extends FormRequest
         return [
             'order_number.required' => 'Order number is required.',
             'order_number.unique' => 'This order number is already taken.',
-            'customer_id.required' => 'Customer is required.',
-            'customer_id.exists' => 'Customer does not exist.',
+            'user_id.required' => 'User is required.',
+            'user_id.exists' => 'User does not exist.',
             'order_status_id.required' => 'Order status is required.',
             'order_status_id.exists' => 'Order status does not exist.',
             'subtotal.required' => 'Subtotal is required.',

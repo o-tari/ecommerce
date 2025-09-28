@@ -20,7 +20,7 @@ class Order extends Model
         'id',
         'order_number',
         'coupon_id',
-        'customer_id',
+        'user_id',
         'order_status_id',
         'subtotal',
         'tax_amount',
@@ -77,9 +77,9 @@ class Order extends Model
         return $this->belongsTo(Coupon::class);
     }
 
-    public function customer(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class);
     }
 
     public function orderStatus(): BelongsTo

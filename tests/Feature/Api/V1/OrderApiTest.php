@@ -4,7 +4,6 @@ namespace Tests\Feature\Api\V1;
 
 use App\Models\Order;
 use App\Models\OrderStatus;
-use App\Models\Customer;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +15,7 @@ class OrderApiTest extends TestCase
 
     protected User $user;
     protected string $token;
-    protected Customer $customer;
+    protected User $customer;
     protected OrderStatus $orderStatus;
 
     protected function setUp(): void
@@ -25,14 +24,14 @@ class OrderApiTest extends TestCase
         
         $this->user = User::factory()->create();
         $this->token = $this->user->createToken('test-token')->plainTextToken;
-        $this->customer = Customer::factory()->create();
+        $this->customer = User::factory()->create();
         $this->orderStatus = OrderStatus::factory()->create();
     }
 
     public function test_can_list_orders(): void
     {
         Order::factory()->count(3)->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -53,7 +52,7 @@ class OrderApiTest extends TestCase
                             '*' => [
                                 'id',
                                 'order_number',
-                                'customer_id',
+                                'user_id',
                                 'order_status_id',
                                 'subtotal',
                                 'total_amount',
@@ -80,14 +79,14 @@ class OrderApiTest extends TestCase
 
         Order::factory()->create([
             'order_status_id' => $status1->id,
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
         
         Order::factory()->create([
             'order_status_id' => $status2->id,
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
@@ -104,17 +103,17 @@ class OrderApiTest extends TestCase
 
     public function test_can_filter_orders_by_customer(): void
     {
-        $customer2 = Customer::factory()->create();
+        $customer2 = User::factory()->create();
 
         Order::factory()->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
         
         Order::factory()->create([
-            'customer_id' => $customer2->id,
+            'user_id' => $customer2->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -123,18 +122,18 @@ class OrderApiTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token,
             'Accept' => 'application/json',
-        ])->getJson('/api/v1/orders?customer_id=' . $this->customer->id);
+        ])->getJson('/api/v1/orders?user_id=' . $this->customer->id);
 
         $response->assertStatus(200);
         $this->assertEquals(1, $response->json('data.total'));
-        $this->assertEquals($this->customer->id, $response->json('data.data.0.customer_id'));
+        $this->assertEquals($this->customer->id, $response->json('data.data.0.user_id'));
     }
 
     public function test_can_search_orders(): void
     {
         Order::factory()->create([
             'order_number' => 'ORD-SPECIAL-001',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -153,7 +152,7 @@ class OrderApiTest extends TestCase
     public function test_can_get_single_order(): void
     {
         $order = Order::factory()->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -171,7 +170,7 @@ class OrderApiTest extends TestCase
                     'data' => [
                         'id',
                         'order_number',
-                        'customer_id',
+                        'user_id',
                         'order_status_id',
                         'subtotal',
                         'total_amount',
@@ -185,7 +184,7 @@ class OrderApiTest extends TestCase
                     'data' => [
                         'id' => $order->id,
                         'order_number' => $order->order_number,
-                        'customer_id' => $order->customer_id,
+                        'user_id' => $order->user_id,
                     ]
                 ]);
     }
@@ -194,7 +193,7 @@ class OrderApiTest extends TestCase
     {
         $orderData = [
             'order_number' => 'ORD-001',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'subtotal' => 84.01,
             'total_amount' => 99.99,
@@ -216,7 +215,7 @@ class OrderApiTest extends TestCase
                     'data' => [
                         'id',
                         'order_number',
-                        'customer_id',
+                        'user_id',
                         'order_status_id',
                         'subtotal',
                         'total_amount',
@@ -232,7 +231,7 @@ class OrderApiTest extends TestCase
                     'message' => 'Order created successfully',
                     'data' => [
                         'order_number' => 'ORD-001',
-                        'customer_id' => $this->customer->id,
+                        'user_id' => $this->customer->id,
                         'order_status_id' => $this->orderStatus->id,
                         'subtotal' => '84.01',
                         'total_amount' => '99.99',
@@ -244,7 +243,7 @@ class OrderApiTest extends TestCase
 
         $this->assertDatabaseHas('orders', [
             'order_number' => 'ORD-001',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
         ]);
@@ -258,7 +257,7 @@ class OrderApiTest extends TestCase
             'Content-Type' => 'application/json',
         ])->postJson('/api/v1/orders', [
             'order_number' => '',
-            'customer_id' => 999999,
+            'user_id' => 999999,
             'order_status_id' => 999999,
             'subtotal' => 'invalid-amount',
             'total_amount' => 'invalid-amount',
@@ -267,7 +266,7 @@ class OrderApiTest extends TestCase
         $response->assertStatus(422)
                 ->assertJsonValidationErrors([
                     'order_number',
-                    'customer_id',
+                    'user_id',
                     'order_status_id',
                     'subtotal',
                     'total_amount'
@@ -278,7 +277,7 @@ class OrderApiTest extends TestCase
     {
         Order::factory()->create([
             'order_number' => 'ORD-EXISTING',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -290,7 +289,7 @@ class OrderApiTest extends TestCase
             'Content-Type' => 'application/json',
         ])->postJson('/api/v1/orders', [
             'order_number' => 'ORD-EXISTING',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'subtotal' => 84.01,
             'total_amount' => 99.99,
@@ -303,7 +302,7 @@ class OrderApiTest extends TestCase
     public function test_can_update_order(): void
     {
         $order = Order::factory()->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -343,7 +342,7 @@ class OrderApiTest extends TestCase
     public function test_can_delete_order(): void
     {
         $order = Order::factory()->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -368,7 +367,7 @@ class OrderApiTest extends TestCase
     public function test_cannot_delete_order_with_items(): void
     {
         $order = Order::factory()->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -410,7 +409,7 @@ class OrderApiTest extends TestCase
     public function test_can_paginate_orders(): void
     {
         Order::factory()->count(25)->create([
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -431,7 +430,7 @@ class OrderApiTest extends TestCase
     {
         Order::factory()->create([
             'order_number' => 'A-ORDER',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,
@@ -439,7 +438,7 @@ class OrderApiTest extends TestCase
         
         Order::factory()->create([
             'order_number' => 'Z-ORDER',
-            'customer_id' => $this->customer->id,
+            'user_id' => $this->customer->id,
             'order_status_id' => $this->orderStatus->id,
             'created_by' => $this->user->id,
             'updated_by' => $this->user->id,

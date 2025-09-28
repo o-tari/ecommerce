@@ -15,15 +15,15 @@ class OrderController extends BaseApiController
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Order::with(['customer', 'orderStatus', 'orderItems', 'creator', 'updater']);
+        $query = Order::with(['user', 'orderStatus', 'orderItems', 'creator', 'updater']);
 
         // Apply filters
         if ($request->has('order_status_id')) {
             $query->where('order_status_id', $request->order_status_id);
         }
 
-        if ($request->has('customer_id')) {
-            $query->where('customer_id', $request->customer_id);
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
         }
 
         if ($request->has('payment_status')) {
@@ -33,7 +33,7 @@ class OrderController extends BaseApiController
         if ($request->has('search')) {
             $query->where(function($q) use ($request) {
                 $q->where('order_number', 'like', '%' . $request->search . '%')
-                  ->orWhere('customer_id', 'like', '%' . $request->search . '%');
+                  ->orWhere('user_id', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -62,7 +62,7 @@ class OrderController extends BaseApiController
 
         $order = Order::create($data);
 
-        $order->load(['customer', 'orderStatus', 'orderItems', 'creator', 'updater']);
+        $order->load(['user', 'orderStatus', 'orderItems', 'creator', 'updater']);
 
         return $this->successResponse($order, 'Order created successfully', Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class OrderController extends BaseApiController
      */
     public function show(Order $order): JsonResponse
     {
-        $order->load(['customer', 'orderStatus', 'orderItems.product', 'creator', 'updater']);
+        $order->load(['user', 'orderStatus', 'orderItems.product', 'creator', 'updater']);
 
         return $this->successResponse($order, 'Order retrieved successfully');
     }
@@ -89,7 +89,7 @@ class OrderController extends BaseApiController
 
         $order->update($data);
 
-        $order->load(['customer', 'orderStatus', 'orderItems', 'creator', 'updater']);
+        $order->load(['user', 'orderStatus', 'orderItems', 'creator', 'updater']);
 
         return $this->successResponse($order, 'Order updated successfully');
     }
