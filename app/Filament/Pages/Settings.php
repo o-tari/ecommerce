@@ -85,8 +85,8 @@ class Settings extends Page
                             ->label('Maintenance Mode')
                             ->helperText('Enable to put the site in maintenance mode'),
                         Toggle::make('allow_registration')
-                            ->label('Allow Customer Registration')
-                            ->helperText('Allow new customers to register'),
+                            ->label('Allow User Registration')
+                            ->helperText('Allow new users to register'),
                         Toggle::make('email_notifications')
                             ->label('Email Notifications')
                             ->helperText('Send email notifications for system events'),

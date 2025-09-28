@@ -25,8 +25,8 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('customer_id')
-                    ->relationship('customer', 'email')
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -82,7 +82,7 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('order_number')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('customer.email')
+                Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('orderStatus.status_name')
@@ -110,9 +110,9 @@ class OrderResource extends Resource
                 Tables\Filters\SelectFilter::make('order_status_id')
                     ->relationship('orderStatus', 'status_name')
                     ->label('Order Status'),
-                Tables\Filters\SelectFilter::make('customer_id')
-                    ->relationship('customer', 'email')
-                    ->label('Customer'),
+                Tables\Filters\SelectFilter::make('user_id')
+                    ->relationship('user', 'name')
+                    ->label('User'),
                 Tables\Filters\Filter::make('created_at')
                     ->form([
                         Forms\Components\DatePicker::make('created_from'),

@@ -4,15 +4,20 @@ namespace App\Filament\Pages;
 
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Customer;
 use App\Models\Category;
+use App\Models\User;
+use App\Models\Tag;
+use App\Models\Supplier;
+use App\Models\Coupon;
+use App\Models\Slideshow;
+use App\Models\Notification;
 use Filament\Pages\Page;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Actions\Action;
-use Filament\Notifications\Notification;
+use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +54,7 @@ class Reports extends Page
                             ->options([
                                 'sales_summary' => 'Sales Summary',
                                 'product_performance' => 'Product Performance',
-                                'customer_analysis' => 'Customer Analysis',
+                                'user_analysis' => 'User Analysis',
                                 'category_breakdown' => 'Category Breakdown',
                                 'inventory_status' => 'Inventory Status',
                             ])
@@ -99,8 +104,8 @@ class Reports extends Page
             case 'product_performance':
                 $this->reportData = $this->generateProductPerformance($startDate, $endDate, $data['category_id']);
                 break;
-            case 'customer_analysis':
-                $this->reportData = $this->generateCustomerAnalysis($startDate, $endDate);
+            case 'user_analysis':
+                $this->reportData = $this->generateUserAnalysis($startDate, $endDate);
                 break;
             case 'category_breakdown':
                 $this->reportData = $this->generateCategoryBreakdown($startDate, $endDate);
@@ -110,7 +115,7 @@ class Reports extends Page
                 break;
         }
 
-        Notification::make()
+        FilamentNotification::make()
             ->title('Report generated successfully')
             ->success()
             ->send();
@@ -171,24 +176,24 @@ class Reports extends Page
         ];
     }
 
-    protected function generateCustomerAnalysis($startDate, $endDate): array
+    protected function generateUserAnalysis($startDate, $endDate): array
     {
-        $customers = Customer::withCount(['orders' => function ($query) use ($startDate, $endDate) {
+        $users = User::withCount(['orders' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }])->withSum(['orders' => function ($query) use ($startDate, $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }], 'total_amount')->orderBy('orders_sum_total_amount', 'desc')->limit(20)->get();
 
         return [
-            'type' => 'customer_analysis',
+            'type' => 'user_analysis',
             'period' => $startDate->format('M d, Y') . ' - ' . $endDate->format('M d, Y'),
-            'customers' => $customers->map(function ($customer) {
+            'users' => $users->map(function ($user) {
                 return [
-                    'name' => $customer->first_name . ' ' . $customer->last_name,
-                    'email' => $customer->email,
-                    'orders' => $customer->orders_count,
-                    'total_spent' => $customer->orders_sum_total_amount ?? 0,
-                    'avg_order_value' => $customer->orders_count > 0 ? ($customer->orders_sum_total_amount ?? 0) / $customer->orders_count : 0,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'orders' => $user->orders_count,
+                    'total_spent' => $user->orders_sum_total_amount ?? 0,
+                    'avg_order_value' => $user->orders_count > 0 ? ($user->orders_sum_total_amount ?? 0) / $user->orders_count : 0,
                 ];
             }),
         ];
@@ -240,7 +245,7 @@ class Reports extends Page
     public function exportReport(): void
     {
         // Here you would implement CSV/Excel export functionality
-        Notification::make()
+        FilamentNotification::make()
             ->title('Export functionality coming soon')
             ->info()
             ->send();

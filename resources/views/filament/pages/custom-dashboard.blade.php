@@ -28,13 +28,6 @@
                 @endif
             </div>
 
-            {{-- Customer Growth Chart --}}
-            @if (in_array(CustomerGrowth::class, $this->getFooterWidgets()))
-                <div class="w-full">
-                    @livewire(CustomerGrowth::class)
-                </div>
-            @endif
-
             {{-- Tables Row --}}
             <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {{-- Latest Orders Widget --}}
@@ -90,16 +83,16 @@
                     </div>
                 </a>
 
-                <a href="{{ route('filament.admin.resources.customers.index') }}" 
+                <a href="{{ route('filament.admin.resources.users.index') }}" 
                    class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
                     <div class="flex-shrink-0">
                         <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-purple-900">Customers</p>
-                        <p class="text-xs text-purple-700">Manage customers</p>
+                        <p class="text-sm font-medium text-purple-900">Users</p>
+                        <p class="text-xs text-purple-700">Manage users</p>
                     </div>
                 </a>
 

@@ -2,48 +2,48 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Customer;
+use App\Models\User;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
 
 class CustomerGrowth extends ChartWidget
 {
-    protected static ?string $heading = 'Customer Growth';
+    protected static ?string $heading = 'User Growth';
     protected static ?int $sort = 6;
     protected int|string|array $columnSpan = 'full';
 
     protected function getData(): array
     {
         $months = collect();
-        $newCustomers = collect();
-        $totalCustomers = collect();
+        $newUsers = collect();
+        $totalUsers = collect();
 
         for ($i = 11; $i >= 0; $i--) {
             $date = now()->subMonths($i);
             $months->push($date->format('M Y'));
             
-            $monthlyNewCustomers = Customer::whereYear('registered_at', $date->year)
-                ->whereMonth('registered_at', $date->month)
+            $monthlyNewUsers = User::whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
                 ->count();
-            $newCustomers->push($monthlyNewCustomers);
+            $newUsers->push($monthlyNewUsers);
             
-            $monthlyTotalCustomers = Customer::where('registered_at', '<=', $date->endOfMonth())->count();
-            $totalCustomers->push($monthlyTotalCustomers);
+            $monthlyTotalUsers = User::where('created_at', '<=', $date->endOfMonth())->count();
+            $totalUsers->push($monthlyTotalUsers);
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'New Customers',
-                    'data' => $newCustomers->toArray(),
+                    'label' => 'New Users',
+                    'data' => $newUsers->toArray(),
                     'borderColor' => '#8b5cf6',
                     'backgroundColor' => 'rgba(139, 92, 246, 0.1)',
                     'yAxisID' => 'y',
                     'type' => 'bar',
                 ],
                 [
-                    'label' => 'Total Customers',
-                    'data' => $totalCustomers->toArray(),
+                    'label' => 'Total Users',
+                    'data' => $totalUsers->toArray(),
                     'borderColor' => '#f59e0b',
                     'backgroundColor' => 'rgba(245, 158, 11, 0.1)',
                     'yAxisID' => 'y1',
@@ -69,7 +69,7 @@ class CustomerGrowth extends ChartWidget
                     'position' => 'left',
                     'title' => [
                         'display' => true,
-                        'text' => 'New Customers',
+                        'text' => 'New Users',
                     ],
                 ],
                 'y1' => [
@@ -78,7 +78,7 @@ class CustomerGrowth extends ChartWidget
                     'position' => 'right',
                     'title' => [
                         'display' => true,
-                        'text' => 'Total Customers',
+                        'text' => 'Total Users',
                     ],
                     'grid' => [
                         'drawOnChartArea' => false,

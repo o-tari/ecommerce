@@ -4,7 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\Customer;
+use App\Models\User;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,7 +20,7 @@ class RecentActivity extends BaseWidget
         return $table
             ->query(
                 Order::query()
-                    ->with(['customer', 'orderStatus'])
+                    ->with(['user', 'orderStatus'])
                     ->latest()
                     ->limit(8)
             )
@@ -29,9 +29,8 @@ class RecentActivity extends BaseWidget
                     ->label('Order')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('customer.first_name')
-                    ->label('Customer')
-                    ->formatStateUsing(fn ($record) => $record->customer ? $record->customer->first_name . ' ' . $record->customer->last_name : 'N/A')
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('User')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('orderStatus.status_name')

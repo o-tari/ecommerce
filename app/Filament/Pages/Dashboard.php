@@ -7,7 +7,6 @@ use App\Filament\Widgets\OrdersChart;
 use App\Filament\Widgets\StatsOverview;
 use App\Filament\Widgets\TopProducts;
 use App\Filament\Widgets\RevenueChart;
-use App\Filament\Widgets\CustomerGrowth;
 use App\Filament\Widgets\RecentActivity;
 use Filament\Pages\Page;
 
@@ -32,7 +31,6 @@ class Dashboard extends \Filament\Pages\Dashboard
         return [
             OrdersChart::class,
             RevenueChart::class,
-            CustomerGrowth::class,
             LatestOrders::class,
             TopProducts::class,
             RecentActivity::class,

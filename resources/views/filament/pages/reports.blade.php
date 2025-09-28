@@ -91,13 +91,13 @@
                         @endif
                         @break
 
-                    @case('customer_analysis')
-                        @if(!empty($reportData['customers']))
+                    @case('user_analysis')
+                        @if(!empty($reportData['users']))
                             <div class="overflow-x-auto">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Spent</th>
@@ -105,13 +105,13 @@
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($reportData['customers'] as $customer)
+                                        @foreach($reportData['users'] as $user)
                                             <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $customer['name'] }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $customer['email'] }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $customer['orders'] }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ number_format($customer['total_spent'], 2) }}</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ number_format($customer['avg_order_value'], 2) }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $user['name'] }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $user['email'] }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $user['orders'] }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ number_format($user['total_spent'], 2) }}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${{ number_format($user['avg_order_value'], 2) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

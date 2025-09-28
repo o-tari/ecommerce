@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Customer;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Supplier;
@@ -19,8 +19,8 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
 
-            Stat::make('Total Customers', Customer::count())
-                ->description('Registered customers')
+            Stat::make('Total Users', User::count())
+                ->description('Registered users')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
 
