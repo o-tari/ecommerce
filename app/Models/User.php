@@ -109,4 +109,28 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attribute::class, 'updated_by');
     }
+
+    /**
+     * Get the orders for this user.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get the cards for this user.
+     */
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    /**
+     * Get the addresses for this user.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
 }
