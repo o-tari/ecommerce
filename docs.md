@@ -554,7 +554,7 @@ GET /api/v1/categories?active=1&parent_id=null&sort_by=category_name&sort_direct
 
 **Query Parameters:**
 - `order_status_id` (integer): Filter by order status
-- `customer_id` (integer): Filter by customer
+- `user_id` (integer): Filter by customer
 - `payment_status` (string): Filter by payment status
 - `search` (string): Search in order number or customer ID
 - `sort_by` (string): Sort field (default: created_at)
@@ -1042,7 +1042,6 @@ GET /api/v1/categories?active=1&parent_id=null&sort_by=category_name&sort_direct
 
 The API also includes endpoints for:
 - **Suppliers** - `/suppliers`
-- **Customers** - `/customers`
 - **Attributes** - `/attributes`
 - **Slideshows** - `/slideshows`
 - **Cards** - `/cards`
