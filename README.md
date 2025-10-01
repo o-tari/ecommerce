@@ -26,7 +26,7 @@ A modern ecommerce API built with Laravel, featuring:
 - **Backend:** Laravel 11
 - **Database:** SQLite (development), MySQL/PostgreSQL (production)
 - **Authentication:** Laravel Sanctum
-- **Admin Panel:** Filament
+- **Admin Panel:** Filament (using `App\Filament\Resources` for managing database resources)
 - **Testing:** Pest PHP
 - **Frontend:** Livewire + Blade
 
