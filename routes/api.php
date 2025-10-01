@@ -104,5 +104,8 @@ Route::prefix('v1')->group(function () {
         // Shipping
         Route::apiResource('shipping-zones', ShippingController::class);
         Route::apiResource('shipping-rates', ShippingController::class);
+
+        // User Dashboard Statistics
+        Route::get('/user/dashboard/statistics', [App\Http\Controllers\UserDashboardStatisticsController::class, 'index'])->name('user.dashboard.statistics');
     });
 });

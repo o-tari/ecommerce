@@ -20,6 +20,7 @@ beforeEach(function () {
         'variant_option' => 'Test Option',
         'variant_option_id' => VariantOption::factory()->create(['product_id' => $this->product->id])->id,
         'is_active' => true, // Ensure the test variant is active
+        'price' => 278.99,
     ]);
 });
 
