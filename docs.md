@@ -288,6 +288,8 @@ GET /api/v1/products?published=1&search=laptop&sort_by=price&sort_direction=asc&
 }
 ```
 
+**Note:** Cannot delete products with items.
+
 ### Categories
 
 #### 1. List Categories
@@ -554,7 +556,7 @@ GET /api/v1/categories?active=1&parent_id=null&sort_by=category_name&sort_direct
 
 **Query Parameters:**
 - `order_status_id` (integer): Filter by order status
-- `customer_id` (integer): Filter by customer
+- `user_id` (integer): Filter by customer
 - `payment_status` (string): Filter by payment status
 - `search` (string): Search in order number or customer ID
 - `sort_by` (string): Sort field (default: created_at)
@@ -1042,7 +1044,6 @@ GET /api/v1/categories?active=1&parent_id=null&sort_by=category_name&sort_direct
 
 The API also includes endpoints for:
 - **Suppliers** - `/suppliers`
-- **Customers** - `/customers`
 - **Attributes** - `/attributes`
 - **Slideshows** - `/slideshows`
 - **Cards** - `/cards`
@@ -1107,3 +1108,53 @@ You can test the API endpoints using tools like:
 
 Remember to include the `Authorization: Bearer {token}` header for protected endpoints.
 
+### User Dashboard Statistics
+
+#### 1. Get User Dashboard Statistics
+**GET** `/user/dashboard/statistics`
+
+**Headers:** `Authorization: Bearer {token}`
+
+**Description:** Retrieves various statistics for the authenticated user's dashboard, including order summaries, active orders, available coupons, top purchased items, and return history.
+
+**Response (200):**
+```json
+{
+    "total_orders_placed": 3,
+    "total_amount_spent": "350.50",
+    "average_order_value": "116.83",
+    "orders_last_30_days": 2,
+    "active_orders": [
+        {
+            "order_number": "ORD-XYZ123",
+            "total_amount": "50.00",
+            "status": "pending",
+            "estimated_delivery_date": "2025-10-15",
+            "created_at": "2025-09-20"
+        }
+    ],
+    "available_coupons": [
+        {
+            "code": "SAVE10",
+            "discount": "10%",
+            "expires_on": "2025-10-31"
+        }
+]
+,
+    "top_purchased_items": [
+        {
+            "product_name": "Product A",
+            "total_quantity": 8,
+            "image_url": "http://example.com/a.jpg"
+        }
+    ],
+    "returned_orders_count": 1
+}
+```
+
+**Response (401):**
+```json
+{
+    "message": "Unauthenticated."
+}
+```
