@@ -26,8 +26,21 @@ A modern ecommerce API built with Laravel, featuring:
 - **Backend:** Laravel 11
 - **Database:** SQLite (development), MySQL/PostgreSQL (production)
 - **Authentication:** Laravel Sanctum
-- **Admin Panel:** Filament (using `App\Filament\Resources` for managing database resources)
-- **Testing:** Pest PHP
+   - **Admin Panel:** Filament (using `App\Filament\Resources` for managing database resources)
+
+## ⚙️ Filament Resources
+
+The Filament admin panel uses the following resources to manage different aspects of the application:
+
+- **AttributeResource**: Manages the `Attribute` model, used for defining product attributes.
+- **CategoryResource**: Manages the `Category` model, for organizing products into categories.
+- **CouponResource**: Manages the `Coupon` model, for creating and managing discount coupons.
+- **OrderResource**: Manages the `Order` model, for viewing and updating customer orders.
+- **ProductResource**: Manages the `Product` model, for comprehensive product management including details, pricing, and inventory.
+- **SlideshowResource**: Manages the `Slideshow` model, for controlling homepage slideshow content.
+- **SupplierResource**: Manages the `Supplier` model, for tracking product suppliers.
+- **TagResource**: Manages the `Tag` model, for categorizing products with tags.
+- **UserResource**: Manages the `User` model, for user administration and role assignment.- **Testing:** Pest PHP
 - **Frontend:** Livewire + Blade
 
 ## 📋 Prerequisites
