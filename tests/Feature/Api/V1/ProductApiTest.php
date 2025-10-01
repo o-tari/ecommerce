@@ -404,11 +404,101 @@ class ProductApiTest extends TestCase
         ]);
     }
 
-    public function test_unauthenticated_user_cannot_access_products(): void
+    public function test_unauthenticated_user_can_list_products(): void
     {
+        Product::factory()->count(3)->create();
+
         $response = $this->withHeaders([
             'Accept' => 'application/json',
         ])->getJson('/api/v1/products');
+
+        $response->assertStatus(200)
+                ->assertJsonStructure([
+                    'success',
+                    'message',
+                    'data' => [
+                        'current_page',
+                        'data' => [
+                            '*' => [
+                                'id',
+                                'product_name',
+                                'slug',
+                                'sku',
+                                'sale_price',
+                                'compare_price',
+                                'quantity',
+                                'published',
+                                'created_at',
+                                'updated_at'
+                            ]
+                        ],
+                        'total',
+                        'per_page'
+                    ]
+                ])
+                ->assertJson([
+                    'success' => true,
+                    'message' => 'Products retrieved successfully'
+                ]);
+
+        $this->assertEquals(3, $response->json('data.total'));
+    }
+
+    public function test_unauthenticated_user_can_get_single_product(): void
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->getJson('/api/v1/products/' . $product->id);
+
+        $response->assertStatus(200)
+                ->assertJsonStructure([
+                    'success',
+                    'message',
+                    'data' => [
+                        'id',
+                        'product_name',
+                        'slug',
+                        'sku',
+                        'sale_price',
+                        'compare_price',
+                        'quantity',
+                        'published',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ])
+                ->assertJson([
+                    'success' => true,
+                    'message' => 'Product retrieved successfully',
+                    'data' => [
+                        'id' => $product->id,
+                        'product_name' => $product->product_name,
+                        'slug' => $product->slug,
+                    ]
+                ]);
+    }
+
+    public function test_unauthenticated_user_cannot_create_product(): void
+    {
+        $productData = [
+            'product_name' => 'New Test Product',
+            'slug' => 'new-test-product',
+            'sku' => 'SKU-001',
+            'sale_price' => 29.99,
+            'compare_price' => 39.99,
+            'quantity' => 100,
+            'short_description' => 'A test product',
+            'product_description' => 'Full description of test product',
+            'published' => true,
+            'disable_out_of_stock' => false,
+        ];
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->postJson('/api/v1/products', $productData);
 
         $response->assertStatus(401);
     }
